@@ -8,10 +8,13 @@ use App\ChainOfResponsibility\Enums\TicketStatus;
 
 class Ticket
 {
-    public string $id;
-    public string $customer;
-    public TicketPriority $priority;
-    public TicketCategory $category;
-    public string $description;
-    public TicketStatus $status;
+    public function __construct(
+        public string $id,
+        public string $customerName,
+        public TicketPriority $priority,
+        public TicketCategory $category,
+        public string $description,
+        public TicketStatus $status = TicketStatus::PENDING,
+    ) {
+    }
 }

@@ -9,15 +9,20 @@ use App\ChainOfResponsibility\Ticket;
 
 class BasicSupportHandler extends TicketHandler
 {
-    public function handle(Ticket $ticket): bool
+    protected function label(): string
     {
-        if($ticket->priority == TicketPriority::LOW && $ticket->category == TicketCategory::ACCOUNT)
-        {
-            $ticket->status = TicketStatus::RESOLVED;
-            info("Basic Support: ticket with description: {$ticket->description} has been handled");
-            return true;
-        }
+        return 'BasicSupport';
+    }
 
-        return parent::handle($ticket);
+    protected function canHandle(Ticket $ticket): bool
+    {
+        return $ticket->priority === TicketPriority::LOW
+            && $ticket->category === TicketCategory::ACCOUNT;
+    }
+
+    protected function process(Ticket $ticket): void
+    {
+        $ticket->status = TicketStatus::RESOLVED;
+        info("[BasicSupport] Handling ticket {$ticket->id}: {$ticket->description} -> Status: RESOLVED");
     }
 }

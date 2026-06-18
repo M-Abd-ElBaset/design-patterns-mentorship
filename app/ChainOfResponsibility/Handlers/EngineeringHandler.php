@@ -9,18 +9,20 @@ use App\ChainOfResponsibility\Ticket;
 
 class EngineeringHandler extends TicketHandler
 {
-    public function handle(Ticket $ticket): bool
+    protected function label(): string
     {
-        if(
-            $ticket->priority == TicketPriority::HIGH &&
-            in_array($ticket->category, [TicketCategory::TECHNICAL, TicketCategory::BUG])
-        )
-        {
-            $ticket->status = TicketStatus::RESOLVED;
-            info("Engineering: ticket with description: {$ticket->description} has been handled");
-            return true;
-        }
+        return 'Engineering';
+    }
 
-            return parent::handle($ticket);
+    protected function canHandle(Ticket $ticket): bool
+    {
+        return $ticket->priority === TicketPriority::HIGH
+            && in_array($ticket->category, [TicketCategory::TECHNICAL, TicketCategory::BUG], true);
+    }
+
+    protected function process(Ticket $ticket): void
+    {
+        $ticket->status = TicketStatus::RESOLVED;
+        info("[Engineering] Handling ticket {$ticket->id}: {$ticket->description} -> Status: RESOLVED");
     }
 }

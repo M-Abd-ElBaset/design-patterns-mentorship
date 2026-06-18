@@ -2,25 +2,28 @@
 
 namespace App\ChainOfResponsibility\Handlers;
 
-use App\ChainOfResponsibility\Enums\TicketCategory;
 use App\ChainOfResponsibility\Enums\TicketPriority;
 use App\ChainOfResponsibility\Enums\TicketStatus;
 use App\ChainOfResponsibility\Ticket;
 
 class ManagementHandler extends TicketHandler
 {
-    public function handle(Ticket $ticket): bool
+    protected function label(): string
     {
-        if(
-            $ticket->priority == TicketPriority::HIGH &&
-            in_array($ticket->category, [TicketCategory::TECHNICAL, TicketCategory::BUG])
-        )
-        {
-            $ticket->status = TicketStatus::RESOLVED;
-            info("Engineering: ticket with description: {$ticket->description} has been handled");
-            return true;
-        }
+        return 'Management';
+    }
 
-            return parent::handle($ticket);
+    protected function canHandle(Ticket $ticket): bool
+    {
+        return true;
+    }
+
+    protected function process(Ticket $ticket): void
+    {
+        $ticket->status = TicketStatus::ESCALATED;
+
+        $priorityLabel = $ticket->priority === TicketPriority::CRITICAL ? 'CRITICAL ' : '';
+
+        info("[Management] Handling {$priorityLabel}ticket {$ticket->id}: {$ticket->description} -> Status: ESCALATED");
     }
 }
