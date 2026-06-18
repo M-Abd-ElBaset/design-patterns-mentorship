@@ -4,6 +4,7 @@ namespace App\ChainOfResponsibility\Handlers;
 
 use App\ChainOfResponsibility\Enums\TicketCategory;
 use App\ChainOfResponsibility\Enums\TicketPriority;
+use App\ChainOfResponsibility\Enums\TicketStatus;
 use App\ChainOfResponsibility\Ticket;
 
 class BasicSupportHandler extends TicketHandler
@@ -12,10 +13,11 @@ class BasicSupportHandler extends TicketHandler
     {
         if($ticket->priority == TicketPriority::LOW && $ticket->category == TicketCategory::ACCOUNT)
         {
+            $ticket->status = TicketStatus::RESOLVED;
             info("Basic Support: ticket with description: {$ticket->description} has been handled");
             return true;
         }
 
-            return parent::handle($ticket);
+        return parent::handle($ticket);
     }
 }

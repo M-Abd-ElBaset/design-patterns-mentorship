@@ -4,6 +4,7 @@ namespace App\ChainOfResponsibility\Handlers;
 
 use App\ChainOfResponsibility\Enums\TicketCategory;
 use App\ChainOfResponsibility\Enums\TicketPriority;
+use App\ChainOfResponsibility\Enums\TicketStatus;
 use App\ChainOfResponsibility\Ticket;
 
 class TechnicalSupportHandler extends TicketHandler
@@ -15,6 +16,7 @@ class TechnicalSupportHandler extends TicketHandler
             in_array($ticket->category, [TicketCategory::TECHNICAL, TicketCategory::BUG])
         )
         {
+            $ticket->status = TicketStatus::RESOLVED;
             info("Technical Support: ticket with description: {$ticket->description} has been handled");
             return true;
         }
